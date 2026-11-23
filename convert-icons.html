@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Convert SVG to PWA Icons</title>
+    <style>
+        body {
+            font-family: Arial;
+            padding: 40px;
+            background: #f5f5f5;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+        }
+
+        h1 {
+            color: #3B82F6;
+        }
+
+        .preview {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .icon-box {
+            text-align: center;
+            padding: 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+        }
+
+        button {
+            background: #3B82F6;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin: 5px;
+        }
+
+        button:hover {
+            background: #2563EB;
+        }
+
+        .info {
+            background: #FEF3C7;
+            border-left: 4px solid #F59E0B;
+            padding: 15px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>☕ Cafe PWA Icon Generator</h1>
+        <p>Download all 4 required PWA icons for your cafe management app</p>
+
+        <div class="info">
+            <strong>Instructions:</strong> Click "Download All" button below, then place all 4 PNG files in your
+            project's <code>public</code> folder.
+        </div>
+
+        <div class="preview">
+            <div class="icon-box">
+                <canvas id="icon192" width="192" height="192"
+                    style="border-radius: 20%; box-shadow: 0 2px 8px rgba(0,0,0,0.2);"></canvas>
+                <p><strong>192×192</strong> Standard</p>
+                <button onclick="downloadIcon('icon192', 'pwa-192x192.png')">Download</button>
+            </div>
+            <div class="icon-box">
+                <canvas id="icon512" width="512" height="512"
+                    style="border-radius: 20%; box-shadow: 0 2px 8px rgba(0,0,0,0.2); max-width: 192px;"></canvas>
+                <p><strong>512×512</strong> Standard</p>
+                <button onclick="downloadIcon('icon512', 'pwa-512x512.png')">Download</button>
+            </div>
+            <div class="icon-box">
+                <canvas id="mask192" width="192" height="192"
+                    style="border-radius: 20%; box-shadow: 0 2px 8px rgba(0,0,0,0.2);"></canvas>
+                <p><strong>192×192</strong> Maskable</p>
+                <button onclick="downloadIcon('mask192', 'pwa-maskable-192x192.png')">Download</button>
+            </div>
+            <div class="icon-box">
+                <canvas id="mask512" width="512" height="512"
+                    style="border-radius: 20%; box-shadow: 0 2px 8px rgba(0,0,0,0.2); max-width: 192px;"></canvas>
+                <p><strong>512×512</strong> Maskable</p>
+                <button onclick="downloadIcon('mask512', 'pwa-maskable-512x512.png')">Download</button>
+            </div>
+        </div>
+
+        <button onclick="downloadAll()" style="width: 100%; font-size: 16px; padding: 15px; background: #10B981;">
+            📥 Download All 4 Icons
+        </button>
+
+        <div class="info" style="margin-top: 30px; background: #DBEAFE; border-color: #3B82F6;">
+            <strong>Next Steps:</strong>
+            <ol style="margin: 10px 0 0 20px;">
+                <li>Save all 4 PNG files to your computer</li>
+                <li>Move them to: <code>C:\Users\admin\OneDrive\Documents\Projects\CafeManagement\public\</code></li>
+                <li>Run <code>npm run build</code> to verify icons load correctly</li>
+                <li>Deploy to Vercel</li>
+            </ol>
+        </div>
+    </div>
+
+    <script>
+        function drawCafeIcon(ctx, size, isMaskable) {
+            // Background gradient
+            const gradient = ctx.createLinearGradient(0, 0, size, size);
+            gradient.addColorStop(0, '#3B82F6');
+            gradient.addColorStop(1, '#2563EB');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, size, size);
+
+            // Safe zone padding for maskable
+            const padding = isMaskable ? size * 0.15 : size * 0.08;
+            const scale = (size - padding * 2) / size;
+            const offsetY = isMaskable ? 0 : -size * 0.03;
+
+            ctx.save();
+            ctx.translate(size / 2, size / 2 + offsetY);
+            ctx.scale(scale, scale);
+
+            // Coffee cup body (trapezoid)
+            const cupWidth = size * 0.35;
+            const cupHeight = size * 0.3;
+
+            ctx.fillStyle = 'white';
+            ctx.beginPath();
+            ctx.moveTo(-cupWidth * 0.9, -cupHeight);
+            ctx.lineTo(-cupWidth, cupHeight);
+            ctx.lineTo(cupWidth, cupHeight);
+            ctx.lineTo(cupWidth * 0.9, -cupHeight);
+            ctx.closePath();
+            ctx.fill();
+
+            // Handle
+            ctx.strokeStyle = 'white';
+            ctx.lineWidth = size * 0.025;
+            ctx.lineCap = 'round';
+            ctx.beginPath();
+            ctx.arc(cupWidth + cupWidth * 0.3, 0, cupWidth * 0.35, -Math.PI / 3, Math.PI / 3);
+            ctx.stroke();
+
+            // Steam
+            ctx.lineWidth = size * 0.018;
+            const steamY = -cupHeight - cupHeight * 0.2;
+            const steamHeight = cupHeight * 0.6;
+
+            [-cupWidth * 0.4, 0, cupWidth * 0.4].forEach((x, i) => {
+                ctx.beginPath();
+                ctx.moveTo(x, steamY);
+                ctx.bezierCurveTo(
+                    x - cupWidth * 0.15, steamY - steamHeight * 0.5,
+                    x + cupWidth * 0.15, steamY - steamHeight * 0.8,
+                    x, steamY - steamHeight
+                );
+                ctx.stroke();
+            });
+
+            ctx.restore();
+
+            // "CAFE" text for larger icons
+            if (size >= 384) {
+                ctx.fillStyle = 'white';
+                ctx.font = `bold ${size * 0.09}px Arial, sans-serif`;
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText('CAFE', size / 2, size * 0.78);
+            }
+        }
+
+        function downloadIcon(canvasId, filename) {
+            const canvas = document.getElementById(canvasId);
+            canvas.toBlob((blob) => {
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = filename;
+                a.click();
+                URL.revokeObjectURL(url);
+            });
+        }
+
+        function downloadAll() {
+            ['icon192', 'icon512', 'mask192', 'mask512'].forEach((id, index) => {
+                setTimeout(() => {
+                    const names = ['pwa-192x192.png', 'pwa-512x512.png', 'pwa-maskable-192x192.png', 'pwa-maskable-512x512.png'];
+                    downloadIcon(id, names[index]);
+                }, index * 300);
+            });
+        }
+
+        // Draw all icons on load
+        window.onload = () => {
+            drawCafeIcon(document.getElementById('icon192').getContext('2d'), 192, false);
+            drawCafeIcon(document.getElementById('icon512').getContext('2d'), 512, false);
+            drawCafeIcon(document.getElementById('mask192').getContext('2d'), 192, true);
+            drawCafeIcon(document.getElementById('mask512').getContext('2d'), 512, true);
+        };
+    </script>
+</body>
+
+</html>
