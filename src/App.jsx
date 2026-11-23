@@ -19,6 +19,10 @@ import MenuCosting from './pages/MenuCosting';
 import Staff from './pages/Staff';
 import Reports from './pages/Reports';
 import RecipeManagement from './pages/RecipeManagement';
+import Customers from './pages/Customers';
+import Tables from './pages/Tables';
+import Orders from './pages/Orders';
+import KitchenDisplay from './pages/KitchenDisplay';
 import Login from './pages/Login';
 import PasswordReset from './pages/PasswordReset';
 
@@ -76,6 +80,14 @@ function App() {
         return <Staff />;
       case 'recipes':
         return <RecipeManagement />;
+      case 'customers':
+        return <Customers />;
+      case 'tables':
+        return <Tables />;
+      case 'orders':
+        return <Orders />;
+      case 'kitchen':
+        return <KitchenDisplay />;
       case 'reports':
         return <Reports />;
       default:

@@ -1,13 +1,17 @@
 function Sidebar({ currentPage, onNavigate }) {
   const menuItems = [
     { id: 'dashboard', label: 'Dashboard', icon: '📊' },
+    { id: 'orders', label: 'Orders', icon: '🛎️' },
+    { id: 'kitchen', label: 'Kitchen Display', icon: '🍳' },
+    { id: 'tables', label: 'Tables', icon: '🪑' },
+    { id: 'customers', label: 'Customers', icon: '👤' },
+    { id: 'sales', label: 'Sales', icon: '💵' },
     { id: 'dailyhisab', label: 'Daily Hisab', icon: '💰' },
     { id: 'purchases', label: 'Purchases', icon: '🛒' },
     { id: 'inventory', label: 'Inventory', icon: '📦' },
-    { id: 'sales', label: 'Sales', icon: '💵' },
     { id: 'suppliers', label: 'Suppliers', icon: '🏪' },
     { id: 'menucosting', label: 'Menu & Costing', icon: '📋' },
-    { id: 'recipes', label: 'Recipe Management', icon: '🍽️' },
+    { id: 'recipes', label: 'Recipes', icon: '🍽️' },
     { id: 'staff', label: 'Staff', icon: '👥' },
     { id: 'reports', label: 'Reports', icon: '📈' },
   ];
